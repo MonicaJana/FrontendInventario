@@ -146,16 +146,18 @@ const ModalDispositivos = ({ onClose, dispositive, listDispositives }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-3xl p-6 relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-3xl p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-black"
+          className="absolute top-2 right-2 text-gray-500 hover:text-black p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
           onClick={onClose}
         >
-          ✖
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
-        <h2 className="text-2xl font-bold text-black mb-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">
           {isEditing ? 'Editar Dispositivo' : 'Registrar Dispositivo'}
         </h2>
 
@@ -164,62 +166,62 @@ const ModalDispositivos = ({ onClose, dispositive, listDispositives }) => {
             <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-black text-sm font-semibold">Código Modelo:</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Código Modelo:</label>
               <input
                 name="codigoModelo"
                 value={form.codigoModelo}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
                 type="text"
                 placeholder="Código modelo"
               />
             </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Código Serial:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Código Serial:</label>
               <input
                 name="codigoSerial"
                 value={form.codigoSerial}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
                 type="text"
                 placeholder="Código Serial"
               />
             </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Nombre:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Nombre:</label>
               <input
                 name="nombreEquipo"
                 value={form.nombreEquipo}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
                 type="text"
                 placeholder="Nombre del equipo"
               />
             </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Color:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Color:</label>
               <input
                 name="color"
                 value={form.color}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
                 type="text"
                 placeholder="Color del equipo"
               />
             </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Categoría:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Categoría:</label>
               <select
                 name="categoriaNombre"
                 value={form.categoriaNombre}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
               >
                 <option value="">Selecciona la categoría</option>
                 {categorias.map((categoria) => (
@@ -230,13 +232,13 @@ const ModalDispositivos = ({ onClose, dispositive, listDispositives }) => {
               </select>
             </div>
 
-           <div>
-            <label className="text-black text-sm font-semibold">Capacidad:</label>
+           <div className="space-y-1">
+            <label className="text-black text-sm font-semibold block">Capacidad:</label>
             <select
               name="capacidad"
               value={form.capacidad}
               onChange={handleChange}
-              className="border w-full p-2 rounded"
+              className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
             >
               <option value="">Selecciona la capacidad</option>
               {capacidadesDisponibles.map((capacidad, idx) => (
@@ -247,25 +249,25 @@ const ModalDispositivos = ({ onClose, dispositive, listDispositives }) => {
             </select>
           </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Precio:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Precio:</label>
               <input
                 name="precio"
                 value={form.precio}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
                 type="number"
                 placeholder="Precio"
               />
             </div>
 
-            <div>
-              <label className="text-black text-sm font-semibold">Tipo:</label>
+            <div className="space-y-1">
+              <label className="text-black text-sm font-semibold block">Tipo:</label>
               <select
                 name="tipo"
                 value={form.tipo}
                 onChange={handleChange}
-                className="border w-full p-2 rounded"
+                className="border w-full p-2 rounded focus:ring-2 focus:ring-black focus:border-transparent"
               >
                 <option value="">Selecciona el tipo</option>
                 <option value="Openbox">Openbox</option>
@@ -273,14 +275,13 @@ const ModalDispositivos = ({ onClose, dispositive, listDispositives }) => {
                 <option value="Semi-nuevo">Semi-nuevo</option>
               </select>
             </div>
-
           </div>
 
           <button
             type="submit"
-            className="mt-4 bg-black text-white w-full p-3 rounded font-bold hover:bg-gray-800 transition"
+            className="mt-6 bg-black text-white w-full p-3 rounded font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-200"
           >
-            {isEditing ? ' ACTUALIZAR' : ' REGISTRAR'}
+            {isEditing ? 'ACTUALIZAR' : 'REGISTRAR'}
           </button>
         </form>
       </div>

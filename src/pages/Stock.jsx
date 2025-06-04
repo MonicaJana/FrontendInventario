@@ -104,117 +104,152 @@ const Stock = () => {
 
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-black">Stock Disponible</h1>
+    <div className="p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-black">Stock Disponible</h1>
       </div>
     
-        <label className="block text-sm font-medium text-gray-700">Puede aplicar filtros utilizando uno, varios o todos los campos disponibles</label>   
-      {/* Filtros */}
-      <div className="w-full flex justify-end mb-6">
+      <div className="mb-4">
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Puede aplicar filtros utilizando uno, varios o todos los campos disponibles
+        </p>   
         
-        <div className="flex flex-wrap gap-4 mb-6">
-            <input
+        {/* Filtros */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <input
             type="text"
             placeholder="Nombre"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="border p-2 rounded"
-            />
-            <input
+            className="w-full border p-2 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+          />
+          <input
             type="text"
             placeholder="Capacidad"
             value={capacidad}
             onChange={(e) => setCapacidad(e.target.value)}
-            className="border p-2 rounded"
-            />
-            <select
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-                className="border p-2 rounded bg-white"
-                >
-                <option value="">Categorías</option>
-                {categorias.map((cat) => (
-                    <option key={cat._id} value={cat.nombreCategoria}>
-                    {cat.nombreCategoria}
-                    </option>
-                ))}
-                </select>
-            <button
+            className="w-full border p-2 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+          />
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className="w-full border p-2 rounded-lg bg-white focus:ring-2 focus:ring-black focus:border-transparent"
+          >
+            <option value="">Categorías</option>
+            {categorias.map((cat) => (
+              <option key={cat._id} value={cat.nombreCategoria}>
+                {cat.nombreCategoria}
+              </option>
+            ))}
+          </select>
+          <button
             onClick={handleFiltrar}
-            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700"
-            >
+            className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+            </svg>
             Filtrar
-            </button>
+          </button>
         </div>
-    </div>
-
-      <div className="overflow-x-auto">
-        {mensajeError && (
-          <div className="mb-4 text-red-600 font-semibold text-center">{mensajeError}</div>
-        )}
-        <table className="w-full border border-gray-300 rounded-lg shadow-sm">
-          <thead>
-            <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-              <th className="border px-4 py-2">Tipo</th>
-              <th className="border px-4 py-2">Código Modelo</th>
-              <th className="border px-4 py-2">Nombre</th>
-              <th className="border px-4 py-2">Color</th>
-              <th className="border px-4 py-2">Capacidad</th>
-              <th className="border px-4 py-2">Cantidad</th>
-              <th className="border px-4 py-2">Códigos de Barra</th>
-            </tr>
-          </thead>
-          <tbody>
-                {stock.length === 0 ? (
-                    <tr>
-                    <td colSpan="7" className="text-center border px-4 py-2">
-                        No se encontraron dispositivos ni accesorios con los filtros aplicados
-                    </td>
-                    </tr>
-            ): (stock.map((item, index) => (
-              <tr key={index} className="text-center">
-                <td className="border px-4 py-2">{item.tipo}</td>
-                <td className="border px-4 py-2">{item.codigoModelo}</td>
-                <td className="border px-4 py-2">{item.nombre}</td>
-                <td className="border px-4 py-2">{item.color}</td>
-                <td className="border px-4 py-2">{item.capacidad}</td>
-                <td className="border px-4 py-2">{item.cantidad}</td>
-                <td className="border px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleVerDetalle(item)}
-                    className="text-blue-600 hover:text-blue-800"
-                    title="Ver detalle"
-                  >
-                    <EyeIcon className="w-5 h-5 inline" />
-                  </button>
-                </td>
-              </tr>
-            ))
-        )}
-          </tbody>
-        </table>
       </div>
 
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        {mensajeError && (
+          <div className="p-4 mb-4 text-red-600 font-semibold text-center bg-red-50 border-l-4 border-red-500">
+            {mensajeError}
+          </div>
+        )}
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Tipo</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Código Modelo</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Nombre</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Color</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Capacidad</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Cantidad</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Códigos</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {stock.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="px-3 py-4 text-sm text-center text-gray-500">
+                    No se encontraron dispositivos ni accesorios con los filtros aplicados
+                  </td>
+                </tr>
+              ) : (
+                stock.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.tipo}</td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.codigoModelo}</td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.nombre}</td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.color}</td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.capacidad}</td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {item.cantidad}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 text-sm whitespace-nowrap">
+                      <button
+                        onClick={() => handleVerDetalle(item)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                        title="Ver códigos de barra"
+                      >
+                        <EyeIcon className="w-5 h-5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-              onClick={() => setModalOpen(false)}
-            >
-              ✖
-            </button>
-            <h2 className="text-xl font-bold mb-4 text-black">Códigos de Barras</h2>
-            {codigosModal.length > 0 ? (
-              <ul className="list-disc pl-6">
-                {codigosModal.map((codigo, idx) => (
-                  <li key={idx} className="text-black text-lg">{codigo}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-700">No hay códigos de barra disponibles para este dispositivo.</p>
-            )}
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all">
+            <div className="flex items-start justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Códigos de Barras
+              </h3>
+              <button
+                className="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-black rounded-full p-1"
+                onClick={() => setModalOpen(false)}
+              >
+                <span className="sr-only">Cerrar</span>
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 max-h-[60vh] overflow-y-auto">
+              {codigosModal.length > 0 ? (
+                <ul className="space-y-2">
+                  {codigosModal.map((codigo, idx) => (
+                    <li key={idx} className="flex items-center text-sm text-gray-700 bg-gray-50 p-2 rounded">
+                      <span className="font-mono">{codigo}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 text-center">No hay códigos de barra disponibles para este dispositivo.</p>
+              )}
+            </div>
+            <div className="flex justify-end gap-2 p-4 border-t">
+              <button
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                onClick={() => setModalOpen(false)}
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}

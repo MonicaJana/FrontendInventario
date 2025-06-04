@@ -124,87 +124,88 @@ const HistorialMovimientos =() => {
         },[]);
 
     return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-4 md:p-8 bg-white min-h-screen">
         <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-black">Historial Movimientos</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-black">Historial Movimientos</h1>
         </div>
 
-         <div className="w-full flex justify-end mb-6">
-            <div className="flex items-center gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Desde:</label>
+        <div className="w-full flex flex-col sm:flex-row justify-end mb-6 space-y-4 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="w-full sm:w-auto">
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Desde:</label>
                     <input
                         type="date"
                         value={fechaInicio}
                         onChange={(e) => setFechaInicio(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
+                        className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"
                     />
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Hasta:</label>
+                <div className="w-full sm:w-auto">
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Hasta:</label>
                     <input
                         type="date"
                         value={fechaFin}
                         onChange={(e) => setFechaFin(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
+                        className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"
                     />
                 </div>
                 <button
                     onClick={filtrarPorFecha}
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700"
+                    className="w-full sm:w-auto bg-black text-white px-3 md:px-4 py-1 md:py-2 rounded hover:bg-gray-700 text-xs md:text-base"
                 >
                     Filtrar
                 </button>
             </div>
         </div>
 
-        <table className="w-full border-collapse">
+        <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
                 <thead>
-                    <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-                        <th className="border px-4 py-2">Fecha</th>
-                        <th className="border px-4 py-2">Responsable</th>
-                        <th className="border px-4 py-2">Área Salida</th>
-                        <th className="border px-4 py-2">Área Llegada</th>
-                        <th className="border px-4 py-2">Detalle</th>
-                        <th className="border px-4 py-2">Acciones</th>
+                    <tr className="bg-gray-100 text-gray-700 uppercase text-xs">
+                        <th className="border px-2 md:px-4 py-2">Fecha</th>
+                        <th className="border px-2 md:px-4 py-2">Responsable</th>
+                        <th className="border px-2 md:px-4 py-2">Área Salida</th>
+                        <th className="border px-2 md:px-4 py-2">Área Llegada</th>
+                        <th className="border px-2 md:px-4 py-2">Detalle</th>
+                        <th className="border px-2 md:px-4 py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {movimientosFiltrados.length === 0 ?(
                         <tr>
-                            <td colSpan="6" className="text-center border px-4 py-2">
+                            <td colSpan="6" className="text-center border px-2 md:px-4 py-2 text-sm">
                                 No hay registros de movimientos
                             </td>
                         </tr>
                     ): (movimientosFiltrados.map((movimiento) => (
-                        <tr key={movimiento._id} className="text-center">
-                            <td className="border px-4 py-2">{new Date(movimiento.fecha).toLocaleString('es-EC')}</td>
-                            <td className="border px-4 py-2">{movimiento.responsable[0].nombreResponsable}</td>
-                            <td className="border px-4 py-2">{movimiento.areaSalida}</td>
-                            <td className="border px-4 py-2">{movimiento.areaLlegada}</td>
-                            <td className="border px-4 py-2 space-x-2">
+                        <tr key={movimiento._id} className="text-center text-xs md:text-sm">
+                            <td className="border px-2 md:px-4 py-2">{new Date(movimiento.fecha).toLocaleString('es-EC')}</td>
+                            <td className="border px-2 md:px-4 py-2">{movimiento.responsable[0].nombreResponsable}</td>
+                            <td className="border px-2 md:px-4 py-2">{movimiento.areaSalida}</td>
+                            <td className="border px-2 md:px-4 py-2">{movimiento.areaLlegada}</td>
+                            <td className="border px-2 md:px-4 py-2">
                                 <button
-                                    onClick={() => handleVerDetalle(movimiento)}  // Pasa el movimiento a editar
+                                    onClick={() => handleVerDetalle(movimiento)}
                                     className="text-blue-600 hover:text-blue-800"
-                                    title="Editar"
+                                    title="Ver detalle"
                                 >
-                                    <EyeIcon className="w-5 h-5 inline" />
+                                    <EyeIcon className="w-4 h-4 md:w-5 md:h-5 inline" />
                                 </button>
                             </td>
-                            <td className="border px-4 py-2 space-x-2">
+                            <td className="border px-2 md:px-4 py-2 space-x-2">
                                 <button
                                     onClick={() => handleEdit(movimiento)}
                                     className="text-blue-600 hover:text-blue-800"
                                     title="Editar"
                                 >
-                                    <PencilSquareIcon className="w-5 h-5 inline" />
+                                    <PencilSquareIcon className="w-4 h-4 md:w-5 md:h-5 inline" />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(movimiento._id)}
                                     className="text-red-600 hover:text-red-800"
                                     title="Eliminar"
                                 >
-                                    <TrashIcon className="w-5 h-5 inline" />
+                                    <TrashIcon className="w-4 h-4 md:w-5 md:h-5 inline" />
                                 </button>
                             </td>
                         </tr>
@@ -212,111 +213,121 @@ const HistorialMovimientos =() => {
                     )}
                 </tbody>
             </table>
-            {modalOpen && movimientoSeleccionado && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-6 rounded-lg max-w-3xl w-full shadow-lg">
-                    <h2 className="text-xl font-bold mb-4 text-black">
+        </div>
+
+        {modalOpen && movimientoSeleccionado && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+                <div className="bg-white p-4 md:p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg">
+                    <h2 className="text-lg md:text-xl font-bold mb-4 text-black">
                         {modoEdicion ? 'Editar Movimiento' : 'Detalle del Movimiento'}
                     </h2>
                     {Object.keys(mensaje).length > 0 && (
                         <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
                     )}
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Fecha:</span> {new Date(movimientoSeleccionado.fecha).toLocaleString('es-EC')}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Responsable:</span> {movimientoSeleccionado.responsable[0]?.nombreResponsable}
-                    </p>
-                    <div className="text-gray-800 mb-1">
-                    <span className="font-semibold">Observación:</span>
-                        {modoEdicion ? (
-                            <textarea
-                                className="w-full border border-gray-300 rounded mt-1 px-2 py-1"
-                                rows="3"
-                                value={observacionEditada}
-                                onChange={(e) => setObservacionEditada(e.target.value)}
-                            />
-                        ) : (
-                            <p>{movimientoSeleccionado.observacion}</p>
-                        )}
+
+                    <div className="space-y-4">
+                        <p className="text-gray-800 mb-1 text-sm md:text-base">
+                            <span className="font-semibold">Fecha:</span> {new Date(movimientoSeleccionado.fecha).toLocaleString('es-EC')}
+                        </p>
+                        <p className="text-gray-800 mb-1 text-sm md:text-base">
+                            <span className="font-semibold">Responsable:</span> {movimientoSeleccionado.responsable[0]?.nombreResponsable}
+                        </p>
+                        <div className="text-gray-800 mb-1">
+                            <span className="font-semibold text-sm md:text-base">Observación:</span>
+                            {modoEdicion ? (
+                                <textarea
+                                    className="w-full border border-gray-300 rounded mt-1 px-2 py-1 text-sm md:text-base"
+                                    rows="3"
+                                    value={observacionEditada}
+                                    onChange={(e) => setObservacionEditada(e.target.value)}
+                                />
+                            ) : (
+                                <p className="text-sm md:text-base">{movimientoSeleccionado.observacion}</p>
+                            )}
+                        </div>
+                        <p className="text-gray-800 mb-1 text-sm md:text-base">
+                            <span className="font-semibold">Área de Salida:</span> {movimientoSeleccionado.areaSalida}
+                        </p>
+                        <p className="text-gray-800 mb-1 text-sm md:text-base">
+                            <span className="font-semibold">Área Llegada:</span> {movimientoSeleccionado.areaLlegada}
+                        </p>
                     </div>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Área de Salida:</span> {movimientoSeleccionado.areaSalida}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Área Llegada:</span> {movimientoSeleccionado.areaLlegada}
-                    </p>
 
                     {/* Tabla de productos */}
                     {movimientoSeleccionado.productos?.length > 0 && (
                         <>
-                        <h3 className="text-lg font-semibold text-black mb-2">Dispositivos</h3>
-                        <table className="w-full border-collapse text-sm mb-4">
-                            <thead>
-                            <tr className="bg-gray-100 text-gray-700">
-                                <th className="border px-3 py-1">Nombre</th>
-                                <th className="border px-3 py-1">Código Barras</th>
-                                <th className="border px-3 py-1">Serial</th>
-                                <th className="border px-3 py-1">Capacidad</th>
-                                <th className="border px-3 py-1">Color</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {movimientoSeleccionado.productos.map((prod, idx) => (
-                                <tr key={idx} className="text-center">
-                                <td className="border px-3 py-1">{prod.nombreEquipo}</td>
-                                <td className="border px-3 py-1">{prod.codigoBarras}</td>
-                                <td className="border px-3 py-1">{prod.codigoSerial}</td>
-                                <td className="border px-3 py-1">{prod.capacidad}</td>
-                                <td className="border px-3 py-1">{prod.color}</td>
+                        <h3 className="text-base md:text-lg font-semibold text-black mb-2 mt-4">Dispositivos</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-xs md:text-sm mb-4">
+                                <thead>
+                                <tr className="bg-gray-100 text-gray-700">
+                                    <th className="border px-2 md:px-3 py-1">Nombre</th>
+                                    <th className="border px-2 md:px-3 py-1">Código Barras</th>
+                                    <th className="border px-2 md:px-3 py-1">Serial</th>
+                                    <th className="border px-2 md:px-3 py-1">Capacidad</th>
+                                    <th className="border px-2 md:px-3 py-1">Color</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {movimientoSeleccionado.productos.map((prod, idx) => (
+                                    <tr key={idx} className="text-center">
+                                    <td className="border px-2 md:px-3 py-1">{prod.nombreEquipo}</td>
+                                    <td className="border px-2 md:px-3 py-1">{prod.codigoBarras}</td>
+                                    <td className="border px-2 md:px-3 py-1">{prod.codigoSerial}</td>
+                                    <td className="border px-2 md:px-3 py-1">{prod.capacidad}</td>
+                                    <td className="border px-2 md:px-3 py-1">{prod.color}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                         </>
                     )}
 
                     {/* Tabla de accesorios */}
                     {movimientoSeleccionado.accesorios?.length > 0 && (
                         <>
-                        <h3 className="text-lg font-semibold text-black mb-2">Accesorios</h3>
-                        <table className="w-full border-collapse text-sm mb-4">
-                            <thead>
-                            <tr className="bg-gray-100 text-gray-700">
-                                <th className="border px-3 py-1">Nombre</th>
-                                <th className="border px-3 py-1">Código Barras</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {movimientoSeleccionado.accesorios.map((acc, idx) => (
-                                <tr key={idx} className="text-center">
-                                <td className="border px-3 py-1">{acc.nombreAccs}</td>
-                                <td className="border px-3 py-1">{acc.codigoBarrasAccs}</td>
+                        <h3 className="text-base md:text-lg font-semibold text-black mb-2">Accesorios</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-xs md:text-sm mb-4">
+                                <thead>
+                                <tr className="bg-gray-100 text-gray-700">
+                                    <th className="border px-2 md:px-3 py-1">Nombre</th>
+                                    <th className="border px-2 md:px-3 py-1">Código Barras</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {movimientoSeleccionado.accesorios.map((acc, idx) => (
+                                    <tr key={idx} className="text-center">
+                                    <td className="border px-2 md:px-3 py-1">{acc.nombreAccs}</td>
+                                    <td className="border px-2 md:px-3 py-1">{acc.codigoBarrasAccs}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                         </>
                     )}
-                    <div className="flex justify-end gap-2 mt-4">
-                    <button
-                        onClick={() => setModalOpen(false)}
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                    >
-                        Cerrar
-                    </button>
-                    {modoEdicion && (
+
+                    <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
                         <button
-                            onClick={handleGuardarObservacion}
-                            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700"
+                            onClick={() => setModalOpen(false)}
+                            className="w-full sm:w-auto bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm md:text-base"
                         >
-                            Guardar
+                            Cerrar
                         </button>
-                    )}
-                </div>
+                        {modoEdicion && (
+                            <button
+                                onClick={handleGuardarObservacion}
+                                className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded hover:bg-gray-700 text-sm md:text-base"
+                            >
+                                Guardar
+                            </button>
+                        )}
                     </div>
                 </div>
-                )}
+            </div>
+        )}
     </div>
     )
 }

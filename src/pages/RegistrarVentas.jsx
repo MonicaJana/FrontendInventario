@@ -257,218 +257,232 @@ const RegistrarVentas = () => {
 
 
   return (
-
-  <div className="p-8 bg-white min-h-screen">
-    <div className="flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-black">Registrar Venta</h1>
-    </div>
-
-    {Object.keys(mensaje).length > 0 && (
-      <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
-    )}
-
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label className="text-sm font-bold text-black">Cédula del Cliente</label>
-        <input
-          type="text"
-          value={form.cliente.cedula}
-          onChange={handleChange}
-          name="cliente.cedula"
-          className="w-full p-2 rounded border text-lefth"
-          placeholder="Ingrese la cédula del cliente"
-        />
+    <div className="p-4 md:p-8 bg-white min-h-screen">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-black">Registrar Venta</h1>
       </div>
 
-      <div>
-        <label className="text-sm font-bold text-black">Nombre del Cliente</label>
-        <input
-          type="text"
-          value={form.cliente.nombre}
-          onChange={handleChange}
-          name="cliente.nombre"
-          className="w-full p-2 rounded border text-lefth"
-          placeholder="Ingrese el nombre del cliente"
-        />
-      </div>
+      {Object.keys(mensaje).length > 0 && (
+        <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
+      )}
 
-      <div>
-        <label className="text-sm font-bold text-black">Método de Pago</label>
-        <select
-          value={form.metodoPago}
-          onChange={handleChange}
-          name="metodoPago"
-          className="w-full p-2 rounded border text-lefth"
-        >
-          <option value="">Seleccione</option>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Tarjeta">Tarjeta</option>
-          <option value="Transferencia">Transferencia</option>
-        </select>
-      </div>
-
-      {(form.metodoPago === "Transferencia" || form.metodoPago === "Tarjeta") && (
-        <>
-          <div>
-            <label className="text-sm font-bold text-black">Número de Documento</label>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {/* Información del Cliente */}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">Cédula del Cliente</label>
             <input
               type="text"
-              value={form.numeroDocumento}
+              value={form.cliente.cedula}
               onChange={handleChange}
-              name="numeroDocumento"
-              className="w-full p-2 rounded border text-lefth"
-              placeholder="Ingrese número de documento"
+              name="cliente.cedula"
+              className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
+              placeholder="Ingrese la cédula del cliente"
             />
           </div>
 
-          <div>
-            <label className="text-sm font-bold text-black">Descripción del Documento</label>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">Nombre del Cliente</label>
             <input
               type="text"
-              value={form.descripcionDocumento}
+              value={form.cliente.nombre}
               onChange={handleChange}
-              name="descripcionDocumento"
-              className="w-full p-2 rounded border text-lefth"
-              placeholder="Ingrese descripción"
+              name="cliente.nombre"
+              className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
+              placeholder="Ingrese el nombre del cliente"
             />
           </div>
-        </>
-      )}
+        </div>
 
-      <div className="md:col-span-2">
-        <label className="text-sm font-bold text-black">Observación</label>
-        <textarea
-          value={form.observacion}
-          onChange={handleChange}
-          name="observacion"
-          className="w-full p-2 rounded border h-24 text-lefth"
-          placeholder="Ingrese la observación"
-        />
-      </div>
+        {/* Método de Pago */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">Método de Pago</label>
+            <select
+              value={form.metodoPago}
+              onChange={handleChange}
+              name="metodoPago"
+              className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
+            >
+              <option value="">Seleccione</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia">Transferencia</option>
+            </select>
+          </div>
 
-      {/* Dispositivos */}
-      <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-4">
-        <div className="w-full">
-          <label className="text-sm font-bold text-black">Código del dispositivo</label>
-          <input
-            type="text"
-            value={productoInput}
-            onChange={(e) => setProductoInput(e.target.value)}
-            name="itemInput"
-            placeholder="Ingrese código de barras del dispositivo"
-            className="w-full p-2 rounded border text-lefth"
+          {(form.metodoPago === "Transferencia" || form.metodoPago === "Tarjeta") && (
+            <>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Número de Documento</label>
+                <input
+                  type="text"
+                  value={form.numeroDocumento}
+                  onChange={handleChange}
+                  name="numeroDocumento"
+                  className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
+                  placeholder="Ingrese número de documento"
+                />
+              </div>
+
+              <div className="space-y-1 md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Descripción del Documento</label>
+                <input
+                  type="text"
+                  value={form.descripcionDocumento}
+                  onChange={handleChange}
+                  name="descripcionDocumento"
+                  className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent"
+                  placeholder="Ingrese descripción"
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Observación */}
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700">Observación</label>
+          <textarea
+            value={form.observacion}
+            onChange={handleChange}
+            name="observacion"
+            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent min-h-[100px]"
+            placeholder="Ingrese la observación"
           />
         </div>
-        <button
-          type="button"
-          onClick={addProducto}
-          className="bg-black hover:bg-gray-700 text-white p-2 rounded mt-6 md:mt-0"
-        >
-          <PlusIcon className="h-5 w-5" />
-        </button>
-      </div>
 
-      {/* Tabla de Dispositivos */}
-      {form.productos.length > 0 && (
-        <div className="mt-6 md:col-span-2">
-          <h2 className="text-lg font-bold mb-2">Dispositivos Agregados</h2>
-          <table className="w-full table-auto border-collapse border border-gray-300 text-center">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-2 py-1">Código de Barras</th>
-                <th className="border px-2 py-1">Código Serial</th>
-                <th className="border px-2 py-1">Nombre</th>
-                <th className="border px-2 py-1">Color</th>
-                <th className="border px-2 py-1">Capacidad</th>
-                <th className="border px-2 py-1">Precio</th>
-                <th className="border px-2 py-1">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {form.productos.map((item, index) => (
-                <tr key={index}>
-                  <td className="border px-2 py-1">{item.codigoBarras}</td>
-                  <td className="border px-2 py-1">{item.codigoSerial}</td>
-                  <td className="border px-2 py-1">{item.nombreEquipo}</td>
-                  <td className="border px-2 py-1">{item.color}</td>
-                  <td className="border px-2 py-1">{item.capacidad}</td>
-                  <td className="border px-2 py-1">${item.precio}</td>
-                  <td className="border px-2 py-1">
-                    <button
-                      type="button"
-                      onClick={() => deleteProducto(item.codigoBarras)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <TrashIcon className="h-5 w-5 inline" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Dispositivos */}
+        <div className="w-full space-y-2">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="w-full">
+              <label className="text-sm font-bold text-black">Código del dispositivo</label>
+              <input
+                type="text"
+                value={productoInput}
+                onChange={(e) => setProductoInput(e.target.value)}
+                name="itemInput"
+                placeholder="Ingrese código de barras del dispositivo"
+                className="w-full p-2 rounded border text-lefth"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={addProducto}
+              className="w-full md:w-auto bg-black hover:bg-gray-700 text-white p-2 rounded"
+            >
+              <PlusIcon className="h-5 w-5 mx-auto" />
+            </button>
+          </div>
         </div>
-      )}
 
-      {/* Accesorios */}
-      <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-4">
-        <div className="w-full">
-          <label className="text-sm font-bold text-black">Código del accesorio</label>
-          <input
-            type="text"
-            value={accesorioInput}
-            onChange={(e) => setAccesorioInput(e.target.value)}
-            name="accesorioInput"
-            placeholder="Ingrese código de barras del accesorio"
-            className="w-full p-2 rounded border text-lefth"
-          />
+        {/* Tabla de Dispositivos */}
+        {form.productos.length > 0 && (
+          <div className="mt-6 overflow-x-auto">
+            <h2 className="text-lg font-bold mb-2">Dispositivos Agregados</h2>
+            <div className="min-w-full overflow-hidden rounded-lg shadow">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código de Barras</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código Serial</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Color</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Capacidad</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {form.productos.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoBarras}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoSerial}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.nombreEquipo}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.color}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.capacidad}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">${item.precio}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">
+                        <button
+                          type="button"
+                          onClick={() => deleteProducto(item.codigoBarras)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Accesorios */}
+        <div className="w-full space-y-2">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="w-full">
+              <label className="text-sm font-bold text-black">Código del accesorio</label>
+              <input
+                type="text"
+                value={accesorioInput}
+                onChange={(e) => setAccesorioInput(e.target.value)}
+                name="accesorioInput"
+                placeholder="Ingrese código de barras del accesorio"
+                className="w-full p-2 rounded border text-lefth"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={addAccesorio}
+              className="w-full md:w-auto bg-black hover:bg-gray-700 text-white p-2 rounded"
+            >
+              <PlusIcon className="h-5 w-5 mx-auto" />
+            </button>
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={addAccesorio}
-          className="bg-black hover:bg-gray-700 text-white p-2 rounded mt-6 md:mt-0"
-        >
-          <PlusIcon className="h-5 w-5" />
-        </button>
-      </div>
 
-      {/* Tabla de Accesorios */}
-      {form.accesorios.length > 0 && (
-        <div className="mt-6 md:col-span-2">
-          <h2 className="text-lg font-bold mb-2">Accesorios Agregados</h2>
-          <table className="w-full table-auto border-collapse border border-gray-300 text-center">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-2 py-1">Código de Barras</th>
-                <th className="border px-2 py-1">Nombre</th>
-                <th className="border px-2 py-1">Precio</th>
-                <th className="border px-2 py-1">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {form.accesorios.map((item, index) => (
-                <tr key={index}>
-                  <td className="border px-2 py-1">{item.codigoBarrasAccs}</td>
-                  <td className="border px-2 py-1">{item.nombreAccs}</td>
-                  <td className="border px-2 py-1">${item.precioAccs}</td>
-                  <td className="border px-2 py-1">
-                    <button
-                      type="button"
-                      onClick={() => deleteAccesorio(item.codigoBarrasAccs)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <TrashIcon className="h-5 w-5 inline" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        {/* Tabla de Accesorios */}
+        {form.accesorios.length > 0 && (
+          <div className="mt-6 overflow-x-auto">
+            <h2 className="text-lg font-bold mb-2">Accesorios Agregados</h2>
+            <div className="min-w-full overflow-hidden rounded-lg shadow">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código de Barras</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {form.accesorios.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoBarrasAccs}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">{item.nombreAccs}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">${item.precioAccs}</td>
+                      <td className="px-3 py-2 text-xs md:text-sm">
+                        <button
+                          type="button"
+                          onClick={() => deleteAccesorio(item.codigoBarrasAccs)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
-      <div className="flex justify-between items-end mt-4 gap-4">
-        {/* Descuento */}
-          <div className="w-1/2 text-lefth">
+        {/* Total y Descuento */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-4 gap-4">
+          <div className="w-full md:w-1/3">
             <label className="text-sm font-bold text-black block mb-1">Descuento</label>
             <input
               type="number"
@@ -480,27 +494,25 @@ const RegistrarVentas = () => {
             />
           </div>
 
-          {/* Total */}
-          <div className="w-1/2 text-right">
+          <div className="w-full md:w-2/3 text-left md:text-right">
             <h3 className="text-lg font-semibold">
               Total a pagar: <span className="text-black">${total.toFixed(2)}</span>
             </h3>
           </div>
-      </div>
+        </div>
 
-      {/* Botón submit */}
-      <div className="md:col-span-2 flex justify-center mt-6">
-        <button
-          type="submit"
-          className="bg-black hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-bold"
-        >
-          REGISTRAR VENTA
-        </button>
-      </div>
-    </form>
-  </div>
-);
-
+        {/* Botón submit */}
+        <div className="flex justify-center mt-6">
+          <button
+            type="submit"
+            className="w-full md:w-auto bg-black hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-bold"
+          >
+            REGISTRAR VENTA
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default RegistrarVentas;

@@ -35,53 +35,66 @@ const TableCategories =({categories, listCategories}) =>{
         setShowModal(true);
     }
 
-   
-
-        return (
-            <>
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-                            <th className="border px-4 py-2">Categoría</th>
-                            <th className="border px-4 py-2">Descripción</th>
-                            <th className="border px-4 py-2">Acciones</th>
+    return (
+        <>
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                Categoría
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                Descripción
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-200">
                         {categories.map((category) => (
-                            <tr key={category._id} className="text-center">
-                                <td className="border px-4 py-2">{category.nombreCategoria}</td>
-                                <td className="border px-4 py-2">{category.descripcionCategoria}</td>
-                                <td className="border px-4 py-2 space-x-2">
-                                    <button
-                                        onClick={() => handleEdit(category)}
-                                        className="text-blue-600 hover:text-blue-800"
-                                        title="Editar"
-                                    >
-                                        <PencilSquareIcon className="w-5 h-5 inline" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(category._id)}
-                                        className="text-red-600 hover:text-red-800"
-                                        title="Eliminar"
-                                    >
-                                        <TrashIcon className="w-5 h-5 inline" />
-                                    </button>
+                            <tr key={category._id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+                                    {category.nombreCategoria}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900">
+                                    {category.descripcionCategoria}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+                                    <div className="flex items-center space-x-3">
+                                        <button
+                                            onClick={() => handleEdit(category)}
+                                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                            title="Editar"
+                                        >
+                                            <PencilSquareIcon className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(category._id)}
+                                            className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                            title="Eliminar"
+                                        >
+                                            <TrashIcon className="w-5 h-5" />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-    
-                {showModal && selectedCategory && (
-                    <ModalUpdateCategory
+            </div>
+
+            {showModal && selectedCategory && (
+                <ModalUpdateCategory
                     category={selectedCategory}
                     setShowModal={setShowModal}
                     listCategories={listCategories}
-                    setMensaje={setMensaje}/>
-                )}
-            </>
-        );
+                    setMensaje={setMensaje}
+                />
+            )}
+        </>
+    );
 
 }
 

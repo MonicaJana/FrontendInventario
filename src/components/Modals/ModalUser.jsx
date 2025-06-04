@@ -84,114 +84,115 @@ const ModalUser = ({ onClose,listUsers, usuario}) => {
   
  
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl p-6 relative">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 md:p-6 relative">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-black"
+          className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
           onClick={onClose}
         >
           ✖
         </button>
 
-        <h2 className="text-xl font-bold text-black mb-4">Registrar Usuario</h2>
+        <h2 className="text-lg md:text-xl font-bold text-black mb-4">Registrar Usuario</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {Object.keys(mensaje).length > 0 && (
-          <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
+            <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
           )}
-          <div className="flex flex-wrap -mx-2">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Nombre */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Nombre:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Nombre:</label>
               <input
                 id='nombre'
                 name="nombre"
                 value={form.nombre}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="text"
                 placeholder="Nombre"
               />
             </div>
 
             {/* Apellido */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Apellido:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Apellido:</label>
               <input
                 id="apellido"
                 name="apellido"
                 value={form.apellido}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="text"
                 placeholder="Apellido"
               />
             </div>
 
             {/* Cédula */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Cédula:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Cédula:</label>
               <input
                 id="cedula"
                 name="cedula"
                 value={form.cedula}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="text"
                 placeholder="Cédula"
               />
             </div>
 
             {/* Teléfono */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Teléfono:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Teléfono:</label>
               <input
                 id="telefono"
                 name="telefono"
                 value={form.telefono}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="text"
                 placeholder="Teléfono"
               />
             </div>
 
             {/* Email */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Email:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Email:</label>
               <input
                 id="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="email"
                 placeholder="Correo Electrónico"
               />
             </div>
 
             {/* Área */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Área:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Área:</label>
               <input
                 id="area"
                 name="area"
                 value={form.area}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="area"
                 placeholder="Área"
               />
             </div>
 
             {/* Rol */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Rol:</label>
+            <div className="col-span-1 sm:col-span-2">
+              <label className="block text-xs font-bold text-black mb-1">Rol:</label>
               <select
                 id="rol"
                 name="rol"
                 value={form.rol}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
               >
                 <option value="">Selecciona un rol</option>
                 <option value="Vendedor">Vendedor</option>
@@ -202,7 +203,7 @@ const ModalUser = ({ onClose,listUsers, usuario}) => {
 
           <button
             type="submit"
-            className="bg-black w-full p-2 text-white uppercase font-bold rounded-lg hover:bg-gray-700 transition-all"
+            className="w-full p-2 mt-4 bg-black text-white text-sm uppercase font-bold rounded-lg hover:bg-gray-700 transition-all"
           >
             REGISTRAR
           </button>

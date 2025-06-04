@@ -69,134 +69,139 @@ const HistorialIngresosDispositivos =() => {
     },[]);
 
     return(
-        <div className="p-8 bg-white min-h-screen">
+        <div className="p-4 md:p-8 bg-white min-h-screen">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-black">Historial de Dispositivos Ingresados</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-black">Historial de Dispositivos Ingresados</h1>
             </div>
 
-         <div className="w-full flex justify-end mb-6">
-            <div className="flex items-center gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Desde:</label>
-                    <input
-                        type="date"
-                        value={fechaInicio}
-                        onChange={(e) => setFechaInicio(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
-                    />
+            <div className="w-full flex flex-col sm:flex-row justify-end mb-6 space-y-4 sm:space-y-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div className="w-full sm:w-auto">
+                        <label className="block text-xs md:text-sm font-medium text-gray-700">Desde:</label>
+                        <input
+                            type="date"
+                            value={fechaInicio}
+                            onChange={(e) => setFechaInicio(e.target.value)}
+                            className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"
+                        />
+                    </div>
+                    <div className="w-full sm:w-auto">
+                        <label className="block text-xs md:text-sm font-medium text-gray-700">Hasta:</label>
+                        <input
+                            type="date"
+                            value={fechaFin}
+                            onChange={(e) => setFechaFin(e.target.value)}
+                            className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"
+                        />
+                    </div>
+                    <button
+                        onClick={filtrarPorFecha}
+                        className="w-full sm:w-auto bg-black text-white px-3 md:px-4 py-1 md:py-2 rounded hover:bg-gray-700 text-xs md:text-base"
+                    >
+                        Filtrar
+                    </button>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Hasta:</label>
-                    <input
-                        type="date"
-                        value={fechaFin}
-                        onChange={(e) => setFechaFin(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1"
-                    />
-                </div>
-                <button
-                    onClick={filtrarPorFecha}
-                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700"
-                >
-                    Filtrar
-                </button>
             </div>
-        </div>
-            <table className="w-full border-collapse">
-                <thead>
-                    <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-                        <th className="border px-4 py-2">Fecha</th>
-                        <th className="border px-4 py-2">Responsable</th>
-                        <th className="border px-4 py-2">Locación</th>
-                        <th className="border px-4 py-2">Equipo</th>
-                        <th className="border px-4 py-2">Precio</th>
-                        <th className="border px-4 py-2">Detalle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dispositivosFiltrados.length === 0 ? (
-                        <tr>
-                            <td colSpan="6" className="text-center border px-4 py-2">
-                                No hay registros de ingresos
-                            </td>
+
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-700 uppercase text-xs">
+                            <th className="border px-2 md:px-4 py-2">Fecha</th>
+                            <th className="border px-2 md:px-4 py-2">Responsable</th>
+                            <th className="border px-2 md:px-4 py-2">Locación</th>
+                            <th className="border px-2 md:px-4 py-2">Equipo</th>
+                            <th className="border px-2 md:px-4 py-2">Precio</th>                
+                            <th className="border px-2 md:px-4 py-2">Detalle</th>
                         </tr>
-                    ) : (dispositivosFiltrados.map((dispositivo) => (
-                        <tr key={dispositivo._id} className="text-center">
-                            <td className="border px-4 py-2">{new Date(dispositivo.fechaIngreso).toLocaleString('es-EC')}</td>
-                            <td className="border px-4 py-2">{dispositivo.responsable[0].nombre}</td>
-                            <td className="border px-4 py-2">{dispositivo.locacion}</td>
-                            <td className="border px-4 py-2">{dispositivo.nombreEquipo}</td>
-                            <td className="border px-4 py-2">{dispositivo.precio}</td>
-                            <td className="border px-4 py-2 space-x-2">
-                                <button
-                                    onClick={() => handleVerDetalle(dispositivo)}  // Pasa el accesorio a editar
-                                    className="text-blue-600 hover:text-blue-800"
-                                    title="Editar"
-                                >
-                                    <EyeIcon className="w-5 h-5 inline" />
-                                </button>
-                            </td>
-                        </tr>
-                    ))
-                    )}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {dispositivosFiltrados.length === 0 ? (
+                            <tr>
+                                <td colSpan="6" className="text-center border px-4 py-2">
+                                    No hay registros de ingresos
+                                </td>
+                            </tr>
+                        ) : (dispositivosFiltrados.map((dispositivo) => (
+                            <tr key={dispositivo._id} className="text-center text-sm md:text-base">
+                                <td className="border px-2 md:px-4 py-2">{new Date(dispositivo.fechaIngreso).toLocaleString('es-EC')}</td>
+                                <td className="border px-2 md:px-4 py-2">{dispositivo.responsable[0].nombre}</td>
+                                <td className="border px-2 md:px-4 py-2">{dispositivo.locacion}</td>
+                                <td className="border px-2 md:px-4 py-2">{dispositivo.nombreEquipo}</td>
+                                <td className="border px-2 md:px-4 py-2">${dispositivo.precio}</td>
+                                <td className="border px-2 md:px-4 py-2">
+                                    <button
+                                        onClick={() => handleVerDetalle(dispositivo)}
+                                        className="text-blue-600 hover:text-blue-800"
+                                        title="Ver detalle"
+                                    >
+                                        <EyeIcon className="w-5 h-5 inline" />
+                                    </button>
+                                </td>
+                            </tr>
+                        )))}
+                    </tbody>
+                </table>
+            </div>
+
             {modalOpen && dispositivoSeleccionado && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-6 rounded-lg max-w-3xl w-full shadow-lg">
-                    <h2 className="text-xl font-bold mb-4 text-black">Detalle del Dispositivo</h2>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+                    <div className="bg-white p-4 md:p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg">
+                        <h2 className="text-lg md:text-xl font-bold mb-4 text-black">Detalle del Dispositivo</h2>
 
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Nombre del Equipo:</span> {dispositivoSeleccionado.nombreEquipo}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Código de Barras:</span> {dispositivoSeleccionado.codigoBarras}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Código Serial:</span> {dispositivoSeleccionado.codigoSerial}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Código Modelo:</span> {dispositivoSeleccionado.codigoModelo}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Capacidad:</span> {dispositivoSeleccionado.capacidad}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Color:</span> {dispositivoSeleccionado.color}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Tipo:</span> {dispositivoSeleccionado.tipo}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Precio:</span> ${dispositivoSeleccionado.precio}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Estado:</span> {dispositivoSeleccionado.estado}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Fecha de Ingreso:</span> {new Date(dispositivoSeleccionado.fechaIngreso).toLocaleString('es-EC')}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Locación:</span> {dispositivoSeleccionado.locacion}
-                    </p>
-                    <p className="text-gray-800 mb-1">
-                        <span className="font-semibold">Categoría:</span> {dispositivoSeleccionado.categoriaNombre?.[0]?.nombreCategoria}
-                    </p>
-                    <p className="text-gray-800 mb-4">
-                        <span className="font-semibold">Responsable:</span> {dispositivoSeleccionado.responsable?.[0]?.nombre}
-                    </p>
-                   
-                    <div className="text-right">
-                        <button
-                        onClick={() => setModalOpen(false)}
-                        className="px-4 py-2 bg-black text-white rounded hover:bg-gray-700"
-                        >
-                        Cerrar
-                        </button>
-                    </div> 
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Nombre del Equipo:</span> {dispositivoSeleccionado.nombreEquipo}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Código de Barras:</span> {dispositivoSeleccionado.codigoBarras}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Código Serial:</span> {dispositivoSeleccionado.codigoSerial}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Código Modelo:</span> {dispositivoSeleccionado.codigoModelo}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Capacidad:</span> {dispositivoSeleccionado.capacidad}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Color:</span> {dispositivoSeleccionado.color}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Tipo:</span> {dispositivoSeleccionado.tipo}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Precio:</span> ${dispositivoSeleccionado.precio}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Estado:</span> {dispositivoSeleccionado.estado}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Fecha de Ingreso:</span> {new Date(dispositivoSeleccionado.fechaIngreso).toLocaleString('es-EC')}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Locación:</span> {dispositivoSeleccionado.locacion}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Categoría:</span> {dispositivoSeleccionado.categoriaNombre?.[0]?.nombreCategoria}
+                            </p>
+                            <p className="text-gray-800 mb-1">
+                                <span className="font-semibold">Responsable:</span> {dispositivoSeleccionado.responsable?.[0]?.nombre}
+                            </p>
+                        </div>
+                       
+                        <div className="text-right mt-6">
+                            <button
+                                onClick={() => setModalOpen(false)}
+                                className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded hover:bg-gray-700"
+                            >
+                                Cerrar
+                            </button>
+                        </div> 
                     </div> 
                 </div>
-                )} 
+            )} 
         </div>
     );
 }

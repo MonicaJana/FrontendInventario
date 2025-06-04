@@ -36,18 +36,20 @@ const Users = () => {
     };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-black">Usuarios Registrados</h1>
+    <div className="p-4 md:p-8 bg-white min-h-screen">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
+        <h1 className="text-xl md:text-2xl font-bold text-black">Usuarios Registrados</h1>
         <button
-          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+          className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded hover:bg-gray-700 transition text-sm md:text-base"
           onClick={() => setModalOpen(true)}
         >
           + Registrar Usuario
         </button>
       </div>
-      <TableUsers users={users} listUsers={listUsers}  />
-        {modalOpen && (
+      <div className="overflow-x-auto">
+        <TableUsers users={users} listUsers={listUsers} />
+      </div>
+      {modalOpen && (
         <ModalUsuario 
           onClose={() => setModalOpen(false)}
           listUsers={listUsers} 

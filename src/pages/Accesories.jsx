@@ -36,25 +36,30 @@ const Accesories = () => {
     }
 
     return(
-        <div className="p-8 bg-white min-h-screen">
-        <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-black">Accesorios Registrados</h1>
-            <button
-            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            onClick={() => setModalOpen(true)}
-            >
-            + Registrar Accesorio
-            </button>
-        </div>
-        <TableAccesories accesories={accesories} listAccesories={listAccesories}/>
+        <div className="p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-black">Accesorios Registrados</h1>
+                <button
+                    className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+                    onClick={() => setModalOpen(true)}
+                >
+                    <span className="w-5 h-5 flex items-center justify-center">+</span>
+                    Registrar Accesorio
+                </button>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <TableAccesories accesories={accesories} listAccesories={listAccesories}/>
+            </div>
+
             {modalOpen && (
-            <ModalAccesory
-            onClose={() => setModalOpen(false)}
-            listAccesories={listAccesories}
-            accesory={null}
-            onGuardar={handleAddAccesory}
-            />
-        )}
+                <ModalAccesory
+                    onClose={() => setModalOpen(false)}
+                    listAccesories={listAccesories}
+                    accesory={null}
+                    onGuardar={handleAddAccesory}
+                />
+            )}
         </div>
     );
 }

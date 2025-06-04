@@ -110,45 +110,48 @@ const ModalUpdateUser = ({ user, setShowModal, listUsers}) => {
     }
   };
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl p-6 relative">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 md:p-6 relative">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-black"
+          className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
           onClick={() => setShowModal(false)}
         >
           ✖
         </button>
 
-        <h2 className="text-xl font-bold text-black mb-4">Editar Usuario: {user.nombre} {user.apellido}</h2>
+        <h2 className="text-lg md:text-xl font-bold text-black mb-4">
+          Editar Usuario: {user.nombre} {user.apellido}
+        </h2>
+        
         <form onSubmit={handleUpdate} className="space-y-4">
           {Object.keys(mensaje).length > 0 && (
             <Message tipo={mensaje.tipo}>{mensaje.respuesta}</Message>
           )}
 
-          <div className="flex flex-wrap -mx-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Teléfono */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Teléfono:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Teléfono:</label>
               <input
                 id="telefono"
                 name="telefono"
                 value={form.telefono}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
                 type="text"
                 placeholder="Teléfono"
               />
             </div>
 
             {/* Área */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Área:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Área:</label>
               <select
                 id="area"
                 name="area"
                 value={form.area}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
               >
                 <option value="">Selecciona un área</option>
                 <option value="Unicornio">Unicornio</option>
@@ -158,14 +161,14 @@ const ModalUpdateUser = ({ user, setShowModal, listUsers}) => {
             </div>
 
             {/* Rol */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Rol:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Rol:</label>
               <select
                 id="rol"
                 name="rol"
                 value={form.rol}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
               >
                 <option value="">Selecciona un rol</option>
                 <option value="Vendedor">Vendedor</option>
@@ -174,84 +177,80 @@ const ModalUpdateUser = ({ user, setShowModal, listUsers}) => {
             </div>
 
             {/* Estado */}
-            <div className="w-1/2 px-2">
-              <label className="text-black text-xs font-bold">Estado:</label>
+            <div>
+              <label className="block text-xs font-bold text-black mb-1">Estado:</label>
               <select
                 id="status"
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                className="border-2 w-full p-1 mt-1 rounded-md mb-3"
+                className="w-full p-2 text-sm border-2 rounded-md"
               >
                 <option value="">Selecciona estado</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
             </div>
-
-             {/* Checkbox para cambiar contraseña */}
-            <div className="w-full px-2">
-              <label className="inline-flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={changePassword}
-                  onChange={() => setChangePassword(!changePassword)}
-                  className="form-checkbox"
-                />
-                <span className="text-black text-sm">¿Desea cambiar la contraseña?</span>
-              </label>
-            </div>
-            {/* Campos de contraseña actual y nueva si se activa el cambio */}
-            {changePassword && (
-              <>
-                <div className="flex items-end gap-4 mb-4">
-                  {/* Contraseña Actual */}
-                  <div className="w-1/3">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Contraseña Nueva
-                    </label>
-                    <input
-                      type="password"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ingrese la contraseña nueva"
-                      value={passwordNuevo}
-                      onChange={(e) => setPasswordNuevo(e.target.value)}
-                    />
-                  </div>
-
-                  {/* Nueva Contraseña */}
-                  <div className="w-1/3">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Repetir Contraseña
-                    </label>
-                    <input
-                      type="password"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Repita contraseña"
-                      value={repetirPassword}
-                      onChange={(e) => setRepetirPassword(e.target.value)}
-                    />
-                  </div>
-
-                  {/* Botón */}
-                  <div className="w-1/3">
-                    <button
-                      type="button"
-                      className="w-full bg-black text-white py-2 mt-6 rounded-md hover:bg-gray-700 transition"
-                      onClick={handleUpdatePassword}
-                    >
-                      ACTUALIZAR
-                    </button>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
+
+          {/* Checkbox para cambiar contraseña */}
+          <div className="w-full mt-4">
+            <label className="inline-flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={changePassword}
+                onChange={() => setChangePassword(!changePassword)}
+                className="form-checkbox"
+              />
+              <span className="text-sm text-black">¿Desea cambiar la contraseña?</span>
+            </label>
+          </div>
+
+          {/* Campos de contraseña */}
+          {changePassword && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-black mb-1">
+                  Contraseña Nueva
+                </label>
+                <input
+                  type="password"
+                  className="w-full p-2 text-sm border rounded-md"
+                  placeholder="Ingrese la contraseña nueva"
+                  value={passwordNuevo}
+                  onChange={(e) => setPasswordNuevo(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-black mb-1">
+                  Repetir Contraseña
+                </label>
+                <input
+                  type="password"
+                  className="w-full p-2 text-sm border rounded-md"
+                  placeholder="Repita contraseña"
+                  value={repetirPassword}
+                  onChange={(e) => setRepetirPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="flex items-end">
+                <button
+                  type="button"
+                  className="w-full bg-black text-white p-2 text-sm rounded-md hover:bg-gray-700 transition"
+                  onClick={handleUpdatePassword}
+                >
+                  ACTUALIZAR CONTRASEÑA
+                </button>
+              </div>
+            </div>
+          )}
 
           {!changePassword && (
             <button
               type="submit"
-              className="bg-black w-full p-2 text-white uppercase font-bold rounded-lg hover:bg-gray-700 transition-all"
+              className="w-full p-2 mt-4 bg-black text-white text-sm uppercase font-bold rounded-lg hover:bg-gray-700 transition-all"
             >
               ACTUALIZAR
             </button>

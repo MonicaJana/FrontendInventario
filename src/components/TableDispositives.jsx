@@ -41,59 +41,106 @@ const TableDispositivos = ({dispositives, listDispositives}) => {
 
     return (
         <>
-                    <table className="table-auto w-full border-collapse">
-                <thead>
-                    <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-                        <th className="border px-4 py-2">Código de Barra</th>
-                       {/* <th className="border px-4 py-2">Código Único</th>*/}
-                        <th className="border px-4 py-2">Código Serial</th>
-                        <th className="border px-4 py-2">Nombre</th>
-                        <th className="border px-4 py-2">Capacidad</th>
-                        <th className="border px-4 py-2">Color</th>
-                        <th className="border px-4 py-2">Precio</th>
-                        <th className="border px-4 py-2">Tipo</th>
-                        <th className="border px-4 py-2">Estado</th>
-                       {/* <th className="border px-4 py-2">Locación</th>
-                        <th className="border px-4 py-2">Fecha Ingreso</th>*/}
-                        <th className="border px-4 py-2">Responsable</th>
-                        <th className="border px-4 py-2">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dispositives?.productos?.map((dispositive) => (
-                        <tr key={dispositive.codigoBarras} className="text-center">
-                            <td className="border px-4 py-2">{dispositive.codigoBarras}</td>
-                            {/*<td className="border px-4 py-2">{dispositive.codigoUnico}</td>*/}
-                            <td className="border px-4 py-2">{dispositive.codigoSerial}</td>
-                            <td className="border px-4 py-2">{dispositive.nombreEquipo}</td>
-                            <td className="border px-4 py-2">{dispositive.capacidad}</td>
-                            <td className="border px-4 py-2">{dispositive.color}</td>
-                            <td className="border px-4 py-2">{dispositive.precio}</td>
-                            <td className="border px-4 py-2">{dispositive.tipo}</td>
-                            <td className="border px-4 py-2">{dispositive.estado}</td>
-                            {/*<td className="border px-4 py-2">{dispositive.locacion}</td>
-                            <td className="border px-4 py-2"> {new Date(dispositive.fechaIngreso).toLocaleString('es-EC')}</td> */}
-                            <th className="border px-4 py-2">{dispositive.responsable[0].nombre}</th>
-                            <td className="border px-4 py-2 space-x-2">
-                                <button
-                                    onClick={() => handleEdit(dispositive)}  // Pasa el accesorio a editar
-                                    className="text-blue-600 hover:text-blue-800"
-                                    title="Editar"
-                                >
-                                    <PencilSquareIcon className="w-5 h-5 inline" />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(dispositive.codigoBarras)}
-                                    className="text-red-600 hover:text-red-800"
-                                    title="Eliminar"
-                                >
-                                    <TrashIcon className="w-5 h-5 inline" />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="overflow-x-auto shadow-md rounded-lg">
+                <div className="inline-block min-w-full align-middle">
+                    <div className="overflow-hidden">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-100">
+                                <tr>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Código de Barra
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Código Serial
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Nombre
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Capacidad
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Color
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Precio
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Tipo
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Estado
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Responsable
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {dispositives?.productos?.map((dispositive) => (
+                                    <tr key={dispositive.codigoBarras} className="hover:bg-gray-50">
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.codigoBarras}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.codigoSerial}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.nombreEquipo}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.capacidad}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.color}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            ${dispositive.precio}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.tipo}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                dispositive.estado === 'Disponible' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : 'bg-red-100 text-red-800'
+                                            }`}>
+                                                {dispositive.estado}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            {dispositive.responsable[0].nombre}
+                                        </td>
+                                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                                            <div className="flex items-center space-x-2">
+                                                <button
+                                                    onClick={() => handleEdit(dispositive)}
+                                                    className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                                    title="Editar"
+                                                >
+                                                    <PencilSquareIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(dispositive.codigoBarras)}
+                                                    className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                                    title="Eliminar"
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
             {modalOpen && selectedDispositives && (
                 <ModalDispositivos
                     onClose={() => setModalOpen(false)}
@@ -103,8 +150,7 @@ const TableDispositivos = ({dispositives, listDispositives}) => {
                 />
             )}        
         </>
-    )
-
+    );
 };
 
 export default TableDispositivos;

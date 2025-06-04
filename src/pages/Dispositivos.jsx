@@ -36,25 +36,34 @@ const Dispositivos =() => {
     }
 
     return(
-        <div className="p-8 bg-white min-h-screen">
-        <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-black">Dispositivos Registrados</h1>
-            <button
-            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            onClick={() => setModalOpen(true)}
-            >
-            + Registrar Dispositivo
-            </button>
-        </div>
-        <TableDispositivos dispositives={dispositives} listDispositives={listDispositives}/>
+        <div className="p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-black text-center sm:text-left">
+                    Dispositivos Registrados
+                </h1>
+                <button
+                    className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+                    onClick={() => setModalOpen(true)}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    <span>Registrar Dispositivo</span>
+                </button>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow">
+                <TableDispositivos dispositives={dispositives} listDispositives={listDispositives}/>
+            </div>
+
             {modalOpen && (
-            <ModalDispositivos
-            onClose={() => setModalOpen(false)}
-            listDispositives={listDispositives}
-            dispositive={null}
-            onGuardar={handleAddDispositive}
-            />
-        )}
+                <ModalDispositivos
+                    onClose={() => setModalOpen(false)}
+                    listDispositives={listDispositives}
+                    dispositive={null}
+                    onGuardar={handleAddDispositive}
+                />
+            )}
         </div>
     );
 }
