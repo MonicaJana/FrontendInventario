@@ -3,39 +3,45 @@ import ModalDispositivos from "../components/Modals/ModalDispositivos"
 import TableDispositivos from "../components/TableDispositives"
 import axios from "axios"
 
-const Dispositivos =() => {
-    const [dispositives, setDispositives] = useState([])
-    const [modalOpen, setModalOpen] = useState(false)
+const Dispositivos = () => {
+    const [dispositives, setDispositives] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const listDispositives = async () => {
+        setIsLoading(true);
+        setError(null);
         try {
             const token = localStorage.getItem('token');
-            const url = `${import.meta.env.VITE_BACKEND_URL}/listarProductos`
-            const options={
+            const url = `${import.meta.env.VITE_BACKEND_URL}/listarProductos`;
+            const options = {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
-                  }
                 }
+            };
     
             const response = await axios.get(url, options);
-            console.log(response)
-            setDispositives(response.data)
+            setDispositives(response.data);
         } catch (error) {
-            console.log(error);
+            console.error('Error al cargar dispositivos:', error);
+            setError(error.response?.data?.msg || 'Error al cargar los dispositivos');
+        } finally {
+            setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         listDispositives();
-    },[]);
+    }, []);
 
-    const handleAddDispositive = (newDispositive) => {
+    const handleAddDispositive = () => {
         setModalOpen(false);
         listDispositives();
-    }
+    };
 
-    return(
+    return (
         <div className="p-4 sm:p-6 lg:p-8 bg-white min-h-screen">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                 <h1 className="text-xl sm:text-2xl font-bold text-black text-center sm:text-left">
@@ -53,7 +59,25 @@ const Dispositivos =() => {
             </div>
             
             <div className="bg-white rounded-lg shadow">
-                <TableDispositivos dispositives={dispositives} listDispositives={listDispositives}/>
+                {error && (
+                    <div className="p-4 mb-4 text-red-600 bg-red-50 border-l-4 border-red-500">
+                        {error}
+                    </div>
+                )}
+
+                {isLoading ? (
+                    <div className="flex items-center justify-center p-8">
+                        <div className="flex flex-col items-center space-y-4">
+                            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-gray-500 font-medium">Cargando dispositivos...</p>
+                        </div>
+                    </div>
+                ) : (
+                    <TableDispositivos 
+                        dispositives={dispositives} 
+                        listDispositives={listDispositives}
+                    />
+                )}
             </div>
 
             {modalOpen && (
@@ -66,5 +90,6 @@ const Dispositivos =() => {
             )}
         </div>
     );
-}
+};
+
 export default Dispositivos;

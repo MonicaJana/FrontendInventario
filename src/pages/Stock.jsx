@@ -8,6 +8,7 @@ const Stock = () => {
   const [stockSeleccionado, setStockSeleccionado] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const [codigosModal, setCodigosModal] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   // Filtros
   const [nombre, setNombre] = useState('');
   const [capacidad, setCapacidad] = useState('');
@@ -15,6 +16,7 @@ const Stock = () => {
   const [mensajeError, setMensajeError] = useState("");
 
   const listStock = async () => {
+    setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
       
@@ -33,7 +35,7 @@ const Stock = () => {
 
       const response = await axios.get(url, options);
       const data = response.data;
-      console.log(data)
+
       const productos = (data.productos || []).map(item => ({
         tipo: item.tipo,
         codigoModelo: item.codigoModelo,
@@ -41,7 +43,7 @@ const Stock = () => {
         color: item.color,
         capacidad: item.capacidad,
         cantidad: item.cantidad,
-        codigos: item.codigoB || [], // Para productos, usa 'codigoB'
+        codigos: item.codigoB || [],
       }));
 
       const accesorios = (data.accesorios || []).map(item => ({
@@ -51,13 +53,16 @@ const Stock = () => {
         color: '—',
         capacidad: '—',
         cantidad: item.cantidad,
-        codigos: item.codigosBarras || [], // Para accesorios, usa 'codigosBarras'
+        codigos: item.codigosBarras || [],
       }));
 
       setStock([...productos, ...accesorios]);
     } catch (error) {
       console.error('Error al obtener el stock:', error);
+      setMensajeError("Error al cargar el stock. Por favor, intente nuevamente.");
       setStock([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -108,7 +113,8 @@ const Stock = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-black">Stock Disponible</h1>
       </div>
-    
+
+      {/* Filtros */}
       <div className="mb-4">
         <p className="text-sm font-medium text-gray-700 mb-2">
           Puede aplicar filtros utilizando uno, varios o todos los campos disponibles
@@ -161,54 +167,63 @@ const Stock = () => {
           </div>
         )}
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Tipo</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Código Modelo</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Nombre</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Color</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Capacidad</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Cantidad</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Códigos</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {stock.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="px-3 py-4 text-sm text-center text-gray-500">
-                    No se encontraron dispositivos ni accesorios con los filtros aplicados
-                  </td>
+        {isLoading ? (
+          <div className="flex items-center justify-center p-8">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-500 font-medium">Cargando stock...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Tipo</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Código Modelo</th>
+                  <th className="hidden md:table-cell px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Nombre</th>
+                  <th className="hidden md:table-cell px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Color</th>
+                  <th className="hidden md:table-cell px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Capacidad</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Cantidad</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider whitespace-nowrap">Códigos</th>
                 </tr>
-              ) : (
-                stock.map((item, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.tipo}</td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.codigoModelo}</td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.nombre}</td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.color}</td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">{item.capacidad}</td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        {item.cantidad}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 text-sm whitespace-nowrap">
-                      <button
-                        onClick={() => handleVerDetalle(item)}
-                        className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                        title="Ver códigos de barra"
-                      >
-                        <EyeIcon className="w-5 h-5" />
-                      </button>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {stock.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="px-3 py-4 text-sm text-center text-gray-500">
+                      No se encontraron dispositivos ni accesorios con los filtros aplicados
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ) : (
+                  stock.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 text-sm whitespace-nowrap">{item.tipo}</td>
+                      <td className="px-3 py-2 text-sm whitespace-nowrap">{item.codigoModelo}</td>
+                      <td className="hidden md:table-cell px-3 py-2 text-sm whitespace-nowrap">{item.nombre}</td>
+                      <td className="hidden md:table-cell px-3 py-2 text-sm whitespace-nowrap">{item.color}</td>
+                      <td className="hidden md:table-cell px-3 py-2 text-sm whitespace-nowrap">{item.capacidad}</td>
+                      <td className="px-3 py-2 text-sm whitespace-nowrap">
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                          {item.cantidad}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-sm whitespace-nowrap">
+                        <button
+                          onClick={() => handleVerDetalle(item)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                          title="Ver códigos de barra"
+                        >
+                          <EyeIcon className="w-5 h-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Modal */}

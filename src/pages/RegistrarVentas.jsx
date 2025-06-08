@@ -1,10 +1,10 @@
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import Message from "../components/Alerts/Message"
 
 const RegistrarVentas = () => {
-  const [form, setForm] = useState({
+  const initialFormState = {
     cliente: { cedula: "", nombre: "" },
     metodoPago: "",
     observacion: "",
@@ -13,20 +13,34 @@ const RegistrarVentas = () => {
     descuento: 0,
     numeroDocumento: "",
     descripcionDocumento: ""
-  });
+  };
+
+  const [form, setForm] = useState(initialFormState);
   const [mensaje, setMensaje] = useState({});
   const [productoInput, setProductoInput] = useState("");
   const [accesorioInput, setAccesorioInput] = useState("");
   const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
+  // Limpiar mensaje después de 3 segundos
+  useEffect(() => {
+    let timer;
+    if (Object.keys(mensaje).length > 0) {
+      timer = setTimeout(() => {
+        setMensaje({});
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [mensaje]);
+
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
 
     if (name.startsWith("cliente.")) {
       const field = name.split(".")[1];
       setForm((prev) => ({
         ...prev,
-        cliente: { ...prev.cliente, [field]: value }
+        cliente: { ...prev.cliente, [field]: value.trim() }
       }));
     } else {
       setForm((prev) => ({
@@ -34,10 +48,23 @@ const RegistrarVentas = () => {
         [name]: value
       }));
     }
-  };
+  }, []);
 
-  const addProducto = async () => {
-  if (productoInput.trim() !== "") {
+  const actualizarTotal = useCallback((productos, accesorios, descuento = 0) => {
+    const totalProductos = productos.reduce((sum, p) => sum + parseFloat(p.precio || 0), 0);
+    const totalAccesorios = accesorios.reduce((sum, a) => sum + parseFloat(a.precioAccs || 0), 0);
+    const subtotal = totalProductos + totalAccesorios;
+    const totalConDescuento = subtotal - descuento;
+    const totalFinal = Math.max(totalConDescuento, 0);
+
+    setTotal(totalFinal);
+    return totalFinal;
+  }, []);
+
+  const addProducto = useCallback(async () => {
+    if (!productoInput.trim()) return;
+    
+    setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
       const url = `${import.meta.env.VITE_BACKEND_URL}/listarProducto/${productoInput}`;
@@ -50,11 +77,8 @@ const RegistrarVentas = () => {
 
       const response = await axios.get(url, options);
       const data = response.data.producto;
-
-      console.log(data)
-      // Agrega el producto completo completo
       
-       setForm((prev) => {
+      setForm((prev) => {
         const nuevosProductos = [
           ...prev.productos,
           {
@@ -67,7 +91,6 @@ const RegistrarVentas = () => {
           },
         ];
 
-        // Actualiza el total usando la función
         const nuevoTotal = actualizarTotal(nuevosProductos, prev.accesorios, prev.descuento);
 
         return {
@@ -75,41 +98,44 @@ const RegistrarVentas = () => {
           productos: nuevosProductos,
           total: nuevoTotal,
         };
-        });
+      });
       setProductoInput("");
     } catch (error) {
-      console.error("Error al buscar dispositivo", error.response?.data || error.message);
-      alert("No se pudo encontrar el dispositivo.");
+      setMensaje({ 
+        respuesta: "No se pudo encontrar el dispositivo", 
+        tipo: false 
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }
-};
+  }, [productoInput, actualizarTotal]);
 
-  const addAccesorio = async () => {
-    if (accesorioInput.trim() !== "") {
+  const addAccesorio = useCallback(async () => {
+    if (!accesorioInput.trim()) return;
 
-      try {
-        const token = localStorage.getItem("token");
-        const url = `${import.meta.env.VITE_BACKEND_URL}/listarAccesorio/${accesorioInput}`;
-        const options = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const url = `${import.meta.env.VITE_BACKEND_URL}/listarAccesorio/${accesorioInput}`;
+      const options = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
       const response = await axios.get(url, options);
       const data = response.data.accesorio;
-      console.log(data)
       
-      //Agregar el accesorio completo
       setForm((prev) => {
-        const nuevosAccesorios = 
-        [...prev.accesorios, 
+        const nuevosAccesorios = [
+          ...prev.accesorios, 
           { 
-          codigoBarrasAccs: data.codigoBarrasAccs,
-          nombreAccs: data.nombreAccs,
-          precioAccs: data.precioAccs
-        }];
+            codigoBarrasAccs: data.codigoBarrasAccs,
+            nombreAccs: data.nombreAccs,
+            precioAccs: data.precioAccs
+          }
+        ];
 
         const nuevoTotal = actualizarTotal(prev.productos, nuevosAccesorios, prev.descuento);
 
@@ -119,16 +145,18 @@ const RegistrarVentas = () => {
           total: nuevoTotal,
         };   
       });
-      setAccesorioInput("")
-      } catch (error) {
-        console.error("Error al buscar accesorio", error.response?.data || error.message);
-      alert("No se pudo encontrar el accesorio.");
-        
-      }
+      setAccesorioInput("");
+    } catch (error) {
+      setMensaje({ 
+        respuesta: "No se pudo encontrar el accesorio", 
+        tipo: false 
+      });
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [accesorioInput, actualizarTotal]);
 
-  const deleteProducto = (codigoBarras) => {
+  const deleteProducto = useCallback((codigoBarras) => {
     setForm((prev) => {
       const nuevosProductos = prev.productos.filter(
         (producto) => producto.codigoBarras !== codigoBarras
@@ -140,66 +168,72 @@ const RegistrarVentas = () => {
         total: nuevoTotal,
       };
     });
-  };
+  }, [actualizarTotal]);
 
-  const deleteAccesorio = (codigoBarrasAccs) => {
-  setForm((prev) => {
-    const nuevosAccesorios = prev.accesorios.filter(
-      (accesorio) => accesorio.codigoBarrasAccs !== codigoBarrasAccs
-    );
-    const nuevoTotal = actualizarTotal(prev.productos, nuevosAccesorios, prev.descuento);
-    return {
-      ...prev,
-      accesorios: nuevosAccesorios,
-      total: nuevoTotal,
-    };
-  });
-};
+  const deleteAccesorio = useCallback((codigoBarrasAccs) => {
+    setForm((prev) => {
+      const nuevosAccesorios = prev.accesorios.filter(
+        (accesorio) => accesorio.codigoBarrasAccs !== codigoBarrasAccs
+      );
+      const nuevoTotal = actualizarTotal(prev.productos, nuevosAccesorios, prev.descuento);
+      return {
+        ...prev,
+        accesorios: nuevosAccesorios,
+        total: nuevoTotal,
+      };
+    });
+  }, [actualizarTotal]);
 
+  const handleDescuentoChange = useCallback((e) => {
+    const nuevoDescuento = Math.max(parseFloat(e.target.value) || 0, 0);
+    setForm((prev) => {
+      const nuevoTotal = actualizarTotal(prev.productos, prev.accesorios, nuevoDescuento);
+      return {
+        ...prev,
+        descuento: nuevoDescuento,
+        total: nuevoTotal,
+      };
+    });
+  }, [actualizarTotal]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Validaciones antes de confirmar
+  const validarFormulario = useCallback(() => {
     if (!form.cliente.cedula || !form.cliente.nombre || !form.metodoPago) {
       setMensaje({ respuesta: "Cédula, nombre del cliente y método de pago son obligatorios", tipo: false });
-      return;
+      return false;
     }
     if (!/^\d{10}$/.test(form.cliente.cedula)) {
       setMensaje({ respuesta: "La cédula debe tener exactamente 10 dígitos numéricos", tipo: false });
-      return;
+      return false;
     }
     if (form.cliente.nombre.trim().length < 3) {
       setMensaje({ respuesta: "El nombre del cliente debe tener al menos 3 caracteres", tipo: false });
-      return;
+      return false;
     }
     if (form.productos.length === 0 && form.accesorios.length === 0) {
       setMensaje({ respuesta: "Debe agregar al menos un dispositivo o accesorio a la venta", tipo: false });
-      return;
+      return false;
     }
-    if (form.metodoPago === "Transferencia" || form.metodoPago === "Tarjeta") {
-      if (!form.numeroDocumento || !form.descripcionDocumento) {
-        setMensaje({ respuesta: "Debe ingresar número y descripción de documento para el método seleccionado", tipo: false });
-        return;
-      }
+    if ((form.metodoPago === "Transferencia" || form.metodoPago === "Tarjeta") &&
+        (!form.numeroDocumento || !form.descripcionDocumento)) {
+      setMensaje({ respuesta: "Debe ingresar número y descripción de documento para el método seleccionado", tipo: false });
+      return false;
     }
     if (form.descuento < 0) {
       setMensaje({ respuesta: "El descuento no puede ser negativo", tipo: false });
-      return;
+      return false;
     }
+    return true;
+  }, [form]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validarFormulario()) return;
+
     const confirmacion = window.confirm("¿Estás seguro de que deseas registrar esta venta?");
-    if (!confirmacion) {
-      setForm({
-        cliente: { cedula: "", nombre: "" },
-        metodoPago: "",
-        observacion: "",
-        productos: [],
-        accesorios: [],
-        descuento: 0,
-        numeroDocumento: "",
-        descripcionDocumento: "",
-      });
-      return;
-    }
+    if (!confirmacion) return;
+
+    setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
       const options = {
@@ -210,50 +244,21 @@ const RegistrarVentas = () => {
       };
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/registrarVenta`, form, options); 
       setMensaje({ respuesta: res.data.msg, tipo: true });
-      setTimeout(() => setMensaje({}), 3000);
-      setForm({
-        cliente: { cedula: "", nombre: "" },
-        metodoPago: "",
-        observacion: "",
-        productos: [],
-        accesorios: [],
-        descuento: 0,
-        numeroDocumento: "",
-        descripcionDocumento: "",
-      });
+      
+      // Resetear el formulario
+      setForm(initialFormState);
       setProductoInput("");
       setAccesorioInput("");
       setTotal(0);
     } catch (error) {
-      setMensaje({ respuesta: error.response?.data?.msg || "Error al registrar la venta", tipo: false });
-      alert("Error al registrar la venta");
+      setMensaje({ 
+        respuesta: error.response?.data?.msg || "Error al registrar la venta", 
+        tipo: false 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
-
-
-  const actualizarTotal = (productos, accesorios, descuento = 0) => {
-    const totalProductos = productos.reduce((sum, p) => sum + parseFloat(p.precio || 0), 0);
-    const totalAccesorios = accesorios.reduce((sum, a) => sum + parseFloat(a.precioAccs || 0), 0);
-    const subtotal = totalProductos + totalAccesorios;
-    const totalConDescuento = subtotal - descuento;
-    const totalFinal = totalConDescuento >= 0 ? totalConDescuento : 0;
-
-    setTotal(totalFinal);
-    return totalFinal;
-  };
-
-  const handleDescuentoChange = (e) => {
-  const nuevoDescuento = parseFloat(e.target.value) || 0;
-  setForm((prev) => {
-    const nuevoTotal = actualizarTotal(prev.productos, prev.accesorios, nuevoDescuento);
-    return {
-      ...prev,
-      descuento: nuevoDescuento,
-      total: nuevoTotal,
-    };
-  });
-};
-
 
 
   return (
@@ -378,43 +383,47 @@ const RegistrarVentas = () => {
 
         {/* Tabla de Dispositivos */}
         {form.productos.length > 0 && (
-          <div className="mt-6 overflow-x-auto">
+          <div className="mt-6">
             <h2 className="text-lg font-bold mb-2">Dispositivos Agregados</h2>
-            <div className="min-w-full overflow-hidden rounded-lg shadow">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código de Barras</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código Serial</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Color</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Capacidad</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Precio</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Acción</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {form.productos.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoBarras}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoSerial}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.nombreEquipo}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.color}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.capacidad}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">${item.precio}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">
-                        <button
-                          type="button"
-                          onClick={() => deleteProducto(item.codigoBarras)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="overflow-x-auto">
+              <div className="inline-block min-w-full align-middle">
+                <div className="overflow-hidden border rounded-lg shadow">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Código de Barras</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Código Serial</th>
+                        <th scope="col" className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Nombre</th>
+                        <th scope="col" className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Color</th>
+                        <th scope="col" className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Capacidad</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Precio</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {form.productos.map((item, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.codigoBarras}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.codigoSerial}</td>
+                          <td className="hidden md:table-cell px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.nombreEquipo}</td>
+                          <td className="hidden md:table-cell px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.color}</td>
+                          <td className="hidden md:table-cell px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.capacidad}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">${item.precio}</td>
+                          <td className="px-4 py-3 text-sm whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => deleteProducto(item.codigoBarras)}
+                              className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                            >
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -445,37 +454,41 @@ const RegistrarVentas = () => {
 
         {/* Tabla de Accesorios */}
         {form.accesorios.length > 0 && (
-          <div className="mt-6 overflow-x-auto">
+          <div className="mt-6">
             <h2 className="text-lg font-bold mb-2">Accesorios Agregados</h2>
-            <div className="min-w-full overflow-hidden rounded-lg shadow">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Código de Barras</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Precio</th>
-                    <th className="px-3 py-2 text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">Acción</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {form.accesorios.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.codigoBarrasAccs}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">{item.nombreAccs}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">${item.precioAccs}</td>
-                      <td className="px-3 py-2 text-xs md:text-sm">
-                        <button
-                          type="button"
-                          onClick={() => deleteAccesorio(item.codigoBarrasAccs)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="overflow-x-auto">
+              <div className="inline-block min-w-full align-middle">
+                <div className="overflow-hidden border rounded-lg shadow">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Código de Barras</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Nombre</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Precio</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {form.accesorios.map((item, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.codigoBarrasAccs}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">{item.nombreAccs}</td>
+                          <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">${item.precioAccs}</td>
+                          <td className="px-4 py-3 text-sm whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => deleteAccesorio(item.codigoBarrasAccs)}
+                              className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                            >
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         )}

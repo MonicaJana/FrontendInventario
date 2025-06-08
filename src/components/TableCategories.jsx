@@ -3,35 +3,36 @@ import axios from 'axios';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import ModalUpdateCategory from "./Modals/ModalUpdateCategory";
 
-const TableCategories =({categories, listCategories}) =>{
-    
+const TableCategories = ({ categories, listCategories }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [mensaje, setMensaje] = useState({})
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleDelete = async (id) => {
         const confirm = window.confirm("¿Estás seguro que deseas eliminar la categoria?");
         if (!confirm) return;
 
+        setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
             const url = `${import.meta.env.VITE_BACKEND_URL}/eliminarCategoria/${id}`;
-            const options = {
+            await axios.delete(url, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
-            };
-            await axios.delete(url,options);
-
-            listCategories();
+            });
+            await listCategories();
         } catch (error) {
-            console.log(error);
+            const errorMessage = error.response?.data?.msg || "Error al eliminar la categoría";
+            alert(errorMessage);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleEdit = (category) => {
-       setSelectedCategory(category);
+        setSelectedCategory(category);
         setShowModal(true);
     }
 
@@ -52,7 +53,7 @@ const TableCategories =({categories, listCategories}) =>{
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className={`bg-white divide-y divide-gray-200 ${isLoading ? 'opacity-50' : ''}`}>
                         {categories.map((category) => (
                             <tr key={category._id} className="hover:bg-gray-50">
                                 <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
@@ -90,12 +91,10 @@ const TableCategories =({categories, listCategories}) =>{
                     category={selectedCategory}
                     setShowModal={setShowModal}
                     listCategories={listCategories}
-                    setMensaje={setMensaje}
                 />
             )}
         </>
     );
-
 }
 
 export default TableCategories;
