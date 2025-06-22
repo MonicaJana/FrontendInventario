@@ -77,18 +77,20 @@ const HistorialIngresosAccesorios =() => {
             <div className="w-full flex flex-col sm:flex-row justify-end mb-6 space-y-4 sm:space-y-0">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div className="w-full sm:w-auto">
-                        <label className="block text-xs md:text-sm font-medium text-gray-700">Desde:</label>
+                        <label  htmlFor="fechaInicio" className="block text-xs md:text-sm font-medium text-gray-700">Desde:</label>
                         <input
                             type="date"
+                            id="fechaInicio"
                             value={fechaInicio}
                             onChange={(e) => setFechaInicio(e.target.value)}
                             className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"
                         />
                     </div>
                     <div className="w-full sm:w-auto">
-                        <label className="block text-xs md:text-sm font-medium text-gray-700">Hasta:</label>
+                        <label htmlFor="fechaFin" className="block text-xs md:text-sm font-medium text-gray-700">Hasta:</label>
                         <input
                             type="date"
+                            id="fechaFin"
                             value={fechaFin}
                             onChange={(e) => setFechaFin(e.target.value)}
                             className="w-full sm:w-auto border border-gray-300 rounded px-2 py-1 text-xs md:text-base"

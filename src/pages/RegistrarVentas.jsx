@@ -302,8 +302,9 @@ const RegistrarVentas = () => {
         {/* Método de Pago */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">Método de Pago</label>
+            <label htmlFor="metodoPago" className="block text-sm font-medium text-gray-700">Método de Pago</label>
             <select
+              id="metodoPago"
               value={form.metodoPago}
               onChange={handleChange}
               name="metodoPago"

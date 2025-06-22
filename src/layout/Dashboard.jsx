@@ -157,6 +157,7 @@ const Dashboard = () => {
         {/* Mobile overlay with improved transition */}
         {isMobileMenuOpen && (
           <div 
+            data-testid="mobile-overlay"
             className="fixed inset-0 bg-black bg-opacity-50 z-0 lg:hidden transition-opacity duration-300"
             onClick={() => setIsMobileMenuOpen(false)}
           />
